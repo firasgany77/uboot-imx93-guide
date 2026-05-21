@@ -4,6 +4,7 @@
 **Release:** Yocto Scarthgap 6.6.y_2.2.2-v1.0  
 **Guide URL:** https://dev.variscite.com/var-som-mx93/mx93-yocto-scarthgap-6.6.y_2.2.2-v1.0/yocto-build-u-boot/
 
+#Author: Firas Abd El Gani
 ---
 
 ## Table of Contents
