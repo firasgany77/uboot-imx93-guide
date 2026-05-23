@@ -84,6 +84,7 @@ U-Boot's jobs include:
 - Jumping to the kernel entry point (via the `booti` or `bootm` command), transferring control to Linux at EL1
 
 **Step 8 — Linux Kernel Takes Over**
+The kernel starts at EL1, decompresses itself if needed, reads the DTB to understand the hardware, initializes drivers, mounts the root filesystem, and starts the init process (systemd or BusyBox init). U-Boot is now completely done — it stays in memory but is never executed again (and its memory space gets reused by the kernel).
 
 ## What the Linux Kernel Actually Does — A Deep Dive
 
