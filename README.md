@@ -423,13 +423,14 @@ The i.MX93's boot image is not a single monolithic binary. It is a carefully str
 
 NXP i.MX9 chips use a firmware packaging format called an **Image Container**. The Boot ROM understands this format. A container has a header that describes the firmware blobs inside it (their load addresses, entry points, and cryptographic signatures for secure boot). The final `flash.bin` / `imx-boot` is actually one or more such containers concatenated.
 
+
+
 ### 7.2 SPL — u-boot-spl.bin
 
-The SPL (Secondary Program Loader) is the first piece of software that U-Boot contributes to the boot sequence. It is compiled from the same U-Boot source tree as U-Boot proper, but configured to be tiny (it must fit in OCRAM, typically under 200 KB on i.MX93).
+The SPL (Secondary Program Loader) is the first-stage bootloader built from the U-Boot source tree, and its entire purpose is to invoke U-Boot proper. It exists because of a fundamental hardware constraint: at power-on, the Boot ROM has no ability to initialize external DDR RAM — only the SoC's small internal OCRAM (~256 KB on i.MX93) is available. The Boot ROM therefore loads the SPL into OCRAM and jumps to it. The SPL then does what the Boot ROM couldn't: it configures the PLL clock tree and runs DDR training via the Synopsys PHY firmware blobs, bringing up the external LPDDR4 RAM. With DDR now available, the SPL loads U-Boot proper (`u-boot.bin`), ATF BL31 (`bl31.bin`), and related firmware into DDR, then hands off execution to ATF BL31 — which in turn drops down to U-Boot proper at EL2.
 
-SPL is built with a separate Kconfig subset controlled by `CONFIG_SPL=y` and related `CONFIG_SPL_*` symbols. Its job is narrow: initialize the minimum hardware (clocks, DDR via the Synopsys PHY firmware), then load U-Boot proper, ATF BL31, and related firmware into DDR, and hand off.
+Because the SPL must fit entirely in OCRAM, it is compiled as a stripped-down subset of U-Boot, controlled by `CONFIG_SPL=y` and related `CONFIG_SPL_*` Kconfig symbols. Only the drivers and subsystems strictly needed for clock init, DDR training, and storage access are included. The output is `spl/u-boot-spl.bin`, a raw binary image typically under 200 KB.
 
-The output file `spl/u-boot-spl.bin` is a raw binary image of the SPL.
 
 ### 7.3 U-Boot Proper — u-boot.bin
 
