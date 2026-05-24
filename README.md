@@ -347,6 +347,11 @@ CONFIG_DM_I2C=y            # Include driver model I2C support
 CONFIG_SYS_TEXT_BASE=0x80200000  # Where in RAM U-Boot proper is linked
 ```
 
+**Note on =y path:**
+=y : Yes — feature is compiled directly into the binary
+=m : Module — compiled as a loadable module (kernel only)
+=n / not present: No — feature is disabled.
+
 ### Where Does defconfig Live?
 
 Defconfig files live in `configs/` within the U-Boot source tree. You will find:
